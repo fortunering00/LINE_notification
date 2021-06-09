@@ -1,0 +1,38 @@
+function setTrigger(){
+
+  const time = new Date();
+  time.setHours(6);
+  time.setMinutes(30);
+  ScriptApp.newTrigger('postContent').timeBased().at(time).create();
+}
+
+
+  function postContent() {
+  var content = "おはようございます！！！！！";
+  content += "\n\uDBC0\uDCA9検温→ドライブ記入\n\nhttps://docs.google.com/spreadsheets/---------------------デフォルトのブラウザで開くを選択して下さい"
+  sendPostContent(content);
+}
+  
+  function sendPostContent(content) {
+  var token = ['---------------------------------------------'];
+  var options = {
+    "method": "post",
+    "payload" : {"message": content },
+    "headers": {"Authorization": "Bearer " + token}    
+  };
+  UrlFetchApp.fetch("https://notify-api.line.me/api/notify", options);
+}
+  
+ function delTrigger() {
+  const triggers = ScriptApp.getProjectTriggers();
+  for(const trigger of triggers){
+    if(trigger.getHandlerFunction() == "postContent"){
+      ScriptApp.deleteTrigger(trigger);
+    }
+  }
+} 
+
+  delTrigger();
+  console.log('実行されました');
+ 
+
